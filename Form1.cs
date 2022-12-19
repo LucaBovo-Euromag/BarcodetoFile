@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
 using System.Threading;
+using BarcodetoFile.Properties;
 
 namespace BarcodetoFile
 {
@@ -17,9 +18,7 @@ namespace BarcodetoFile
         {
             InitializeComponent();
 
-            save_path = Properties.Settings.Default.save_path;
-            file_name = Properties.Settings.Default.file_name;
-            log_path  = Properties.Settings.Default.log_path;
+            RefreshSettings();
 
             if (!Directory.Exists(log_path))
             {
@@ -36,9 +35,21 @@ namespace BarcodetoFile
             OpenCom();
         }
 
+        private void RefreshSettings()
+        {
+            save_path = Properties.Settings.Default.save_path;
+            read_path = Properties.Settings.Default.read_path;
+            file_name = Properties.Settings.Default.file_name;
+            log_path = Properties.Settings.Default.log_path;
+            move_path = Settings.Default.move_path;
+            move_enabled = Settings.Default.move_enabled;
+        }
 
         string save_path="";
+        string read_path = "";
         string log_path = "";
+        string move_path = "";
+        bool move_enabled = false;
         string file_name="";
         string log_file ="Scan_History";
         string recived_from_com = "";
@@ -51,14 +62,17 @@ namespace BarcodetoFile
         bool new_msg = false;
         private void pathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(save_path))
+            PathSettings settings_page = new PathSettings();
+            settings_page.Show();
+
+            /*if (Directory.Exists(save_path))
             {
                 MessageBox.Show(save_path);
             }
             else
             {
                 MessageBox.Show("Percorso non valido\r\n" + save_path, "Salva file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            }*/
         }
 
         private void textBox_code_Validated(object sender, EventArgs e)
@@ -101,7 +115,7 @@ namespace BarcodetoFile
         {
            
           // file_name = msg;
-            string savefilepath = save_path + "\\" + file_name;
+            //string savefilepath = save_path + "\\" + file_name;
 
 
             if (msg.Length > 3)
@@ -112,7 +126,34 @@ namespace BarcodetoFile
 
                     msg = msg.Trim();
 
-                    File.WriteAllLines(savefilepath, new string[] { msg });
+                    if(GetFileTxtAndCopy(msg) == true )
+                    {
+                        textBox_msg.Text = "File message creato in: " + save_path;
+
+                        if(move_enabled)
+                        {
+                            textBox_msg.Text += "\r\nFile Bdl spostato in: " + move_path;
+                        }
+
+                        txt_box_code.BackColor = Color.LightGreen;
+                        txt_box_code.Text = msg;
+
+                        label_timescan.Text = "Ora di scannerizzazione:  " + DateTime.Now.ToString("HH:mm:ss  dd/MM/yy ");
+                        cnt_time_out = 0;
+                        WriteLog(msg);
+                        return true;
+                    }
+                    else
+                    {
+                        label_timescan.Text = "BDL NON TROVATO / ERRORE";
+                        textBox_msg.Text = "Bdl Non Trovato / Errore";
+
+                        txt_box_code.BackColor = Color.LightSalmon;
+                        txt_box_code.Text = msg;
+                        return false;
+                    }
+
+                    /*File.WriteAllLines(savefilepath, new string[] { msg });
                     textBox_msg.Text = "File salvato in:\r\n\r\n " + savefilepath;
                    
                     txt_box_code.BackColor = Color.LightGreen;
@@ -121,7 +162,7 @@ namespace BarcodetoFile
                     label_timescan.Text = "Ora di scannerizzazione:  " + DateTime.Now.ToString("HH:mm:ss  dd/MM/yy ");
                     cnt_time_out = 0;
                     WriteLog(msg);
-                    return true;
+                    return true;*/
                 }
                 catch (Exception ex)
                 {
@@ -143,6 +184,39 @@ namespace BarcodetoFile
 
             return false;
         }
+
+        private bool GetFileTxtAndCopy(string filename)
+        {
+            try
+            {
+                string[] txtList = Directory.GetFiles(read_path, "*.txt");
+
+                foreach (string f in txtList)
+                {
+                    string fName = f.Substring(read_path.Length + 1);
+
+                    if (f.Contains(filename))
+                    {
+                        File.Copy(f, save_path + "//message.txt", false);
+
+                        if(move_enabled)
+                        {
+                            File.Move(f, move_path + "//" + fName);
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+        }
+
+
 
         private bool WriteLog(string msg)
         {
@@ -252,7 +326,9 @@ namespace BarcodetoFile
 
         private void timer_ciclo_Tick(object sender, EventArgs e)
         {
-            
+
+            RefreshSettings();
+
             cnt_time_out++;
             if (cnt_time_out > cnt_time_out_gray)
             {
@@ -268,7 +344,7 @@ namespace BarcodetoFile
             }
             else
             {
-               toolStripStatusLabel1.Text = "In attesa di nuova scanssione... (" + DateTime.Now.ToString("HH:mm:ss dd/MM/yy)");
+               toolStripStatusLabel1.Text = "In attesa di nuova scansione... (" + DateTime.Now.ToString("HH:mm:ss dd/MM/yy)");
             }
 
             if (new_msg && !inPausa)
@@ -334,6 +410,21 @@ namespace BarcodetoFile
                 WriteFile(txt_box_code.Text);
                 // textBox_code.Text = "";
             // txt_box_code.Focus();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (GetFileTxtAndCopy(txt_box_code.Text) == true)
+            {
+                textBox_msg.Text = "File salvato in:\r\n\r\n " + save_path;
+
+                txt_box_code.BackColor = Color.LightGreen;
+                txt_box_code.Text = txt_box_code.Text;
+
+                label_timescan.Text = "Ora di scannerizzazione:  " + DateTime.Now.ToString("HH:mm:ss  dd/MM/yy ");
+                cnt_time_out = 0;
+                WriteLog(txt_box_code.Text);
+            }
         }
     }
 }

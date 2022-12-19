@@ -44,12 +44,12 @@ namespace BarcodetoFile
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer_ciclo = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel_Com_Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label_timescan = new System.Windows.Forms.Label();
             this.btn_pausa = new System.Windows.Forms.Button();
             this.btn_send = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.toolStripStatusLabel_Com_Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -150,6 +150,12 @@ namespace BarcodetoFile
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel_Com_Status
+            // 
+            this.toolStripStatusLabel_Com_Status.Name = "toolStripStatusLabel_Com_Status";
+            this.toolStripStatusLabel_Com_Status.Size = new System.Drawing.Size(76, 17);
+            this.toolStripStatusLabel_Com_Status.Text = "COM STATUS";
+            // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
@@ -198,12 +204,6 @@ namespace BarcodetoFile
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
-            // toolStripStatusLabel_Com_Status
-            // 
-            this.toolStripStatusLabel_Com_Status.Name = "toolStripStatusLabel_Com_Status";
-            this.toolStripStatusLabel_Com_Status.Size = new System.Drawing.Size(76, 17);
-            this.toolStripStatusLabel_Com_Status.Text = "COM STATUS";
-            // 
             // Form_barcode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -221,7 +221,7 @@ namespace BarcodetoFile
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(505, 244);
             this.Name = "Form_barcode";
-            this.Text = "Barcode to .csv file Converter [rev 1.1]";
+            this.Text = "Barcode to .csv file Converter [rev 2.0]";
             this.Load += new System.EventHandler(this.Form_barcode_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form_barcode_MouseClick);
             this.MouseEnter += new System.EventHandler(this.Form_barcode_MouseEnter);

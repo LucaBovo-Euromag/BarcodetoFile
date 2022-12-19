@@ -23,12 +23,15 @@ namespace BarcodetoFile.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("G:\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath")]
         public string save_path {
             get {
                 return ((string)(this["save_path"]));
+            }
+            set {
+                this["save_path"] = value;
             }
         }
         
@@ -65,12 +68,15 @@ namespace BarcodetoFile.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("logpath")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath\\Log")]
         public string log_path {
             get {
                 return ((string)(this["log_path"]));
+            }
+            set {
+                this["log_path"] = value;
             }
         }
         
@@ -80,6 +86,42 @@ namespace BarcodetoFile.Properties {
         public int time_out_minimize {
             get {
                 return ((int)(this["time_out_minimize"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ReadPath")]
+        public string read_path {
+            get {
+                return ((string)(this["read_path"]));
+            }
+            set {
+                this["read_path"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath\\Processed")]
+        public string move_path {
+            get {
+                return ((string)(this["move_path"]));
+            }
+            set {
+                this["move_path"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool move_enabled {
+            get {
+                return ((bool)(this["move_enabled"]));
+            }
+            set {
+                this["move_enabled"] = value;
             }
         }
     }

@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BarcodetoFile.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="save_path" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">G:\</Value>
+    <Setting Name="save_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\SavePath</Value>
     </Setting>
     <Setting Name="lastfile" Type="System.String" Scope="User">
       <Value Profile="(Default)">lastfile </Value>
@@ -14,11 +14,20 @@
     <Setting Name="file_name" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Scanner.csv</Value>
     </Setting>
-    <Setting Name="log_path" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">logpath</Value>
+    <Setting Name="log_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\SavePath\Log</Value>
     </Setting>
     <Setting Name="time_out_minimize" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="read_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\ReadPath</Value>
+    </Setting>
+    <Setting Name="move_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\SavePath\Processed</Value>
+    </Setting>
+    <Setting Name="move_enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
