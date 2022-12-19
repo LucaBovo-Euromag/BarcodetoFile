@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BarcodetoFile.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="save_path" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">G:\</Value>
+    </Setting>
+    <Setting Name="lastfile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">lastfile </Value>
+    </Setting>
+    <Setting Name="Serial_com" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM5</Value>
+    </Setting>
+    <Setting Name="file_name" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Scanner.csv</Value>
+    </Setting>
+    <Setting Name="log_path" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logpath</Value>
+    </Setting>
+    <Setting Name="time_out_minimize" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
