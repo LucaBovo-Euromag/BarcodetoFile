@@ -197,14 +197,35 @@ namespace BarcodetoFile
 
                     if (f.Contains(filename))
                     {
-                        File.Copy(f, save_path + "//message.txt", false);
+                        string MessageFile = save_path + "//message.txt";
 
-                        if(move_enabled)
+                        if (File.Exists(MessageFile) )
                         {
-                            File.Move(f, move_path + "//" + fName);
+                            MessageBox.Show("File message.txt ancora presente\nCancellare commessa per procedere", "Errore Resinatrice", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
                         }
+                        else
+                        {
+                            File.Copy(f, save_path + "//message.txt", false);
 
-                        return true;
+                            if (move_enabled)
+                            {
+                                string ProcessedFile = move_path + "//" + fName;
+
+                                if( File.Exists(ProcessedFile) )
+                                {
+                                    if( MessageBox.Show("File " + fName + " già presente, continuare?", "Bdl già elaborato", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK )
+                                    {
+                                        string FileName = Path.GetFileNameWithoutExtension(ProcessedFile);
+                                        string ProcessedFileNew = move_path + "//" + FileName + "_reprocessedOnDate_" + DateTime.Now.ToString("dd-MM-yy_HH_mm_ss");
+                                        File.Copy(f, ProcessedFileNew);
+                                    }
+                                }
+                                else    
+                                    File.Copy(f, ProcessedFile);
+                            }
+                            return true;
+                        }
                     }
                 }
                 return false;

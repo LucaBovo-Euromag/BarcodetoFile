@@ -221,7 +221,7 @@ namespace BarcodetoFile
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(505, 244);
             this.Name = "Form_barcode";
-            this.Text = "Barcode to .csv file Converter [rev 2.0]";
+            this.Text = "Barcode to .csv file Converter [rev 2.1]";
             this.Load += new System.EventHandler(this.Form_barcode_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Form_barcode_MouseClick);
             this.MouseEnter += new System.EventHandler(this.Form_barcode_MouseEnter);
