@@ -62,6 +62,7 @@ namespace BarcodetoFile
         bool move_enabled = false;
         bool ftp_enabled = false;
         bool ftp_write_request = false;
+        bool test_copy = false;
         string MessageFile = "";
         string SourceFile = "";
         string DestinationFile = "";
@@ -199,7 +200,8 @@ namespace BarcodetoFile
 
                 foreach (string f in txtList)
                 {
-                    string fName = f.Substring(read_path.Length + 1);
+                    //string fName = f.Substring(read_path.Length + 1);
+                    string fName = Path.GetFileName(f);
 
                     if (f.Contains(filename))
                     {
@@ -221,7 +223,10 @@ namespace BarcodetoFile
                         }
                         else
                         {                            
-                            File.Copy(SourceFile, MessageFile, false);
+                            if(!test_copy)
+                                File.Copy(SourceFile, MessageFile, false);
+                            else
+                                test_copy = false;
                             MoveFile(SourceFile, DestinationFile);
                             return true;
                         }
@@ -516,5 +521,13 @@ namespace BarcodetoFile
             }
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {            
+            if (!inPausa)
+            { 
+                test_copy = true;
+                WriteFile(txt_box_code.Text);
+            }
+        }
     }
 }
