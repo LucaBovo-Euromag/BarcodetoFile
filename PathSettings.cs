@@ -18,11 +18,21 @@ namespace BarcodetoFile
         {
             InitializeComponent();
 
+            LoadParams();
+
+        }
+
+        private void LoadParams()
+        {
             readPathTxt.Text = Settings.Default.read_path;
             savePathTxt.Text = Settings.Default.save_path;
             logsPathTxt.Text = Settings.Default.log_path;
             movePathTxt.Text = Settings.Default.move_path;
             moveEnabled.Checked = Settings.Default.move_enabled;
+            ftpEnabled.Checked = Settings.Default.ftpEnabled;
+            ftpServerName.Text = Settings.Default.ftpServerName;
+            ftpUser.Text = Settings.Default.ftpUser;
+            ftpPassword.Text = Settings.Default.ftpPassword;
 
             if (moveEnabled.Checked)
             {
@@ -33,6 +43,19 @@ namespace BarcodetoFile
             {
                 movePathTxt.Enabled = false;
                 movePathBtn.Enabled = false;
+            }
+
+            if (ftpEnabled.Checked)
+            {
+                ftpServerName.Enabled = true;
+                ftpUser.Enabled = true;
+                ftpPassword.Enabled = true;
+            }
+            else
+            {
+                ftpServerName.Enabled = false;
+                ftpUser.Enabled = false;
+                ftpPassword.Enabled = false;
             }
         }
 
@@ -110,6 +133,54 @@ namespace BarcodetoFile
                 movePathTxt.Text = folderDlg.SelectedPath;
                 Settings.Default.move_path = folderDlg.SelectedPath;
                 Settings.Default.Save();
+            }
+        }
+
+        private void ftpEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ftpEnabled.Checked)
+            {
+                ftpServerName.Enabled = true;
+                ftpUser.Enabled = true;
+                ftpPassword.Enabled = true; 
+                Settings.Default.ftpEnabled = true;
+                label2.Text = "Cartella File Temporaneo";
+            }
+            else
+            {
+                ftpServerName.Enabled = false;
+                ftpUser.Enabled = false;
+                ftpPassword.Enabled = false;
+                Settings.Default.ftpEnabled = false;
+                label2.Text = "Cartella File message.txt";
+            }
+            Settings.Default.Save();
+        }
+
+        private void SaveFtpServerName_Click(object sender, EventArgs e)
+        {
+            Settings.Default.ftpServerName = ftpServerName.Text;
+            Settings.Default.Save();
+        }
+
+        private void SaveFtpUser_Click(object sender, EventArgs e)
+        {
+            Settings.Default.ftpUser = ftpUser.Text;
+            Settings.Default.Save();
+        }
+
+        private void SaveFtpPassword_Click(object sender, EventArgs e)
+        {
+            Settings.Default.ftpPassword = ftpPassword.Text;
+            Settings.Default.Save();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Sei sicuro?", "Caricamento configurazione di default", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                Settings.Default.Reset();
+                LoadParams();
             }
         }
     }

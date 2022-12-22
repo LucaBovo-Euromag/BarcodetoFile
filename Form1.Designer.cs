@@ -93,7 +93,7 @@ namespace BarcodetoFile
             // 
             this.pathToolStripMenuItem.Name = "pathToolStripMenuItem";
             this.pathToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.pathToolStripMenuItem.Text = "Path";
+            this.pathToolStripMenuItem.Text = "Settings";
             this.pathToolStripMenuItem.Click += new System.EventHandler(this.pathToolStripMenuItem_Click);
             // 
             // toolStripComboBox1

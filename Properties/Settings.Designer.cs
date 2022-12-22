@@ -25,7 +25,7 @@ namespace BarcodetoFile.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TempMsg")]
         public string save_path {
             get {
                 return ((string)(this["save_path"]));
@@ -70,7 +70,7 @@ namespace BarcodetoFile.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath\\Log")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Log")]
         public string log_path {
             get {
                 return ((string)(this["log_path"]));
@@ -91,7 +91,7 @@ namespace BarcodetoFile.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ReadPath")]
+        [global::System.Configuration.DefaultSettingValueAttribute("S:\\")]
         public string read_path {
             get {
                 return ((string)(this["read_path"]));
@@ -103,7 +103,7 @@ namespace BarcodetoFile.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\SavePath\\Processed")]
+        [global::System.Configuration.DefaultSettingValueAttribute("S:\\Archive")]
         public string move_path {
             get {
                 return ((string)(this["move_path"]));
@@ -122,6 +122,54 @@ namespace BarcodetoFile.Properties {
             }
             set {
                 this["move_enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ftp://ADM:574510@192.168.85.205/")]
+        public string ftpServerName {
+            get {
+                return ((string)(this["ftpServerName"]));
+            }
+            set {
+                this["ftpServerName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ADM")]
+        public string ftpUser {
+            get {
+                return ((string)(this["ftpUser"]));
+            }
+            set {
+                this["ftpUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("574510")]
+        public string ftpPassword {
+            get {
+                return ((string)(this["ftpPassword"]));
+            }
+            set {
+                this["ftpPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ftpEnabled {
+            get {
+                return ((bool)(this["ftpEnabled"]));
+            }
+            set {
+                this["ftpEnabled"] = value;
             }
         }
     }

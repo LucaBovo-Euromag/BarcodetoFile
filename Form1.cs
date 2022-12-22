@@ -9,6 +9,9 @@ using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using BarcodetoFile.Properties;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace BarcodetoFile
 {
@@ -37,19 +40,32 @@ namespace BarcodetoFile
 
         private void RefreshSettings()
         {
-            save_path = Properties.Settings.Default.save_path;
-            read_path = Properties.Settings.Default.read_path;
-            file_name = Properties.Settings.Default.file_name;
-            log_path = Properties.Settings.Default.log_path;
+            save_path = Settings.Default.save_path;
+            read_path = Settings.Default.read_path;
+            file_name = Settings.Default.file_name;
+            log_path = Settings.Default.log_path;
             move_path = Settings.Default.move_path;
             move_enabled = Settings.Default.move_enabled;
+            ftp_server = Settings.Default.ftpServerName;
+            ftp_user = Settings.Default.ftpUser;
+            ftp_password = Settings.Default.ftpPassword;
+            ftp_enabled = Settings.Default.ftpEnabled;
         }
 
         string save_path="";
         string read_path = "";
         string log_path = "";
         string move_path = "";
+        string ftp_server = "";
+        string ftp_user = "";
+        string ftp_password = "";
         bool move_enabled = false;
+        bool ftp_enabled = false;
+        bool ftp_write_request = false;
+        string MessageFile = "";
+        string SourceFile = "";
+        string DestinationFile = "";
+        string BdlNumber = "";
         string file_name="";
         string log_file ="Scan_History";
         string recived_from_com = "";
@@ -122,25 +138,26 @@ namespace BarcodetoFile
             {
                 try
                 {
-             
+                    BdlNumber = msg.Trim();
 
-                    msg = msg.Trim();
-
-                    if(GetFileTxtAndCopy(msg) == true )
-                    {
-                        textBox_msg.Text = "File message creato in: " + save_path;
-
-                        if(move_enabled)
+                    if(GetFileTxtAndCopy(BdlNumber) == true )
+                    {                        
+                        if(ftp_enabled == false)
                         {
-                            textBox_msg.Text += "\r\nFile Bdl spostato in: " + move_path;
+                            textBox_msg.Text = "File message creato in: " + save_path;
+
+                            if (move_enabled)
+                            {
+                                textBox_msg.Text += "\r\nFile Bdl spostato in: " + move_path;
+                            }
                         }
 
                         txt_box_code.BackColor = Color.LightGreen;
-                        txt_box_code.Text = msg;
+                        txt_box_code.Text = BdlNumber;
 
                         label_timescan.Text = "Ora di scannerizzazione:  " + DateTime.Now.ToString("HH:mm:ss  dd/MM/yy ");
                         cnt_time_out = 0;
-                        WriteLog(msg);
+                        WriteLog(BdlNumber);
                         return true;
                     }
                     else
@@ -149,20 +166,9 @@ namespace BarcodetoFile
                         textBox_msg.Text = "Bdl Non Trovato / Errore";
 
                         txt_box_code.BackColor = Color.LightSalmon;
-                        txt_box_code.Text = msg;
+                        txt_box_code.Text = BdlNumber;
                         return false;
                     }
-
-                    /*File.WriteAllLines(savefilepath, new string[] { msg });
-                    textBox_msg.Text = "File salvato in:\r\n\r\n " + savefilepath;
-                   
-                    txt_box_code.BackColor = Color.LightGreen;
-                    txt_box_code.Text = msg;
-
-                    label_timescan.Text = "Ora di scannerizzazione:  " + DateTime.Now.ToString("HH:mm:ss  dd/MM/yy ");
-                    cnt_time_out = 0;
-                    WriteLog(msg);
-                    return true;*/
                 }
                 catch (Exception ex)
                 {
@@ -197,33 +203,26 @@ namespace BarcodetoFile
 
                     if (f.Contains(filename))
                     {
-                        string MessageFile = save_path + "//message.txt";
+                        MessageFile = save_path + "//message.txt";
 
-                        if (File.Exists(MessageFile) )
+                        SourceFile = f;
+                        DestinationFile = fName;
+
+                        if (ftp_enabled)  //Invio file Message via ftp
+                        {
+                            File.Copy(SourceFile, MessageFile, true);
+                            ftp_write_request = true;
+                            return true;
+                        }
+                        else if (File.Exists(MessageFile)) //Salavatggio file Message su cartella locale
                         {
                             MessageBox.Show("File message.txt ancora presente\nCancellare commessa per procedere", "Errore Resinatrice", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return false;
                         }
                         else
-                        {
-                            File.Copy(f, save_path + "//message.txt", false);
-
-                            if (move_enabled)
-                            {
-                                string ProcessedFile = move_path + "//" + fName;
-
-                                if( File.Exists(ProcessedFile) )
-                                {
-                                    if( MessageBox.Show("File " + fName + " già presente, continuare?", "Bdl già elaborato", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK )
-                                    {
-                                        string FileName = Path.GetFileNameWithoutExtension(ProcessedFile);
-                                        string ProcessedFileNew = move_path + "//" + FileName + "_reprocessedOnDate_" + DateTime.Now.ToString("dd-MM-yy_HH_mm_ss");
-                                        File.Copy(f, ProcessedFileNew);
-                                    }
-                                }
-                                else    
-                                    File.Copy(f, ProcessedFile);
-                            }
+                        {                            
+                            File.Copy(SourceFile, MessageFile, false);
+                            MoveFile(SourceFile, DestinationFile);
                             return true;
                         }
                     }
@@ -237,7 +236,25 @@ namespace BarcodetoFile
             }
         }
 
+        private void MoveFile(string sourceFile, string destinationFile)
+        {
+            if (move_enabled)
+            {
+                string ProcessedFile = move_path + "//" + destinationFile;
 
+                if (File.Exists(ProcessedFile))
+                {
+                    if (MessageBox.Show("File " + destinationFile + " già presente, continuare?", "Bdl già elaborato", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                    {
+                        string FileName = Path.GetFileNameWithoutExtension(ProcessedFile);
+                        string ProcessedFileNew = move_path + "//" + FileName + "_reprocessedOnDate_" + DateTime.Now.ToString("dd-MM-yy_HH_mm_ss");
+                        File.Copy(sourceFile, ProcessedFileNew);
+                    }
+                }
+                else
+                    File.Copy(sourceFile, ProcessedFile);
+            }
+        }
 
         private bool WriteLog(string msg)
         {
@@ -378,6 +395,13 @@ namespace BarcodetoFile
                 }
                 recived_from_com = "";
             }
+
+            if(ftp_write_request)
+            {
+                ftp_write_request = false;
+                FtpSendFile(MessageFile);
+            }
+
             new_msg = false;
 
 
@@ -447,5 +471,50 @@ namespace BarcodetoFile
                 WriteLog(txt_box_code.Text);
             }
         }
+
+        private FtpSendState FtpState;
+        private enum FtpSendState
+        {
+            SEND_DataBin,
+            SEND_DataReady,
+            SEND_Wait
+        }
+
+        private void FtpSendFile(string UploadFile)
+        {
+            string FileName = Path.GetFileName(UploadFile);
+            Uri FtpUri = new Uri(ftp_server + FileName);
+
+            using (var client = new WebClient())
+            {
+                client.Credentials = new NetworkCredential(ftp_user, ftp_password);
+                client.UploadFileAsync(FtpUri, WebRequestMethods.Ftp.UploadFile, UploadFile);
+                client.UploadFileCompleted += FTUploadFileCompleted;                
+            }
+        }
+
+        private void FTUploadFileCompleted(object sender, UploadFileCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                label_timescan.Text = "ERRORE FTP";
+                textBox_msg.Text = e.Error.Message;
+
+                txt_box_code.BackColor = Color.LightSalmon;
+                txt_box_code.Text = BdlNumber;
+            }                
+            else
+            {
+                MoveFile(SourceFile, DestinationFile);
+
+                textBox_msg.Text = "File message inviato via Ftp correttamente";
+
+                if (move_enabled)
+                {
+                    textBox_msg.Text += "\r\nFile Bdl spostato in: " + move_path;
+                }
+            }
+        }
+
     }
 }
